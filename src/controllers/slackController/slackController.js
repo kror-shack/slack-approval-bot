@@ -1,3 +1,5 @@
+const { slackApp } = require("../../slackApp");
+
 const slack_events_index = async (req, res) => {
   if (req.body.type === "url_verification") {
     return res.send({ challenge: req.body.challenge });
@@ -11,7 +13,6 @@ const slack_events_index = async (req, res) => {
     res.status(500).send("Internal Server Error");
   }
 };
-
 module.exports = {
   slack_events_index,
 };

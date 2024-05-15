@@ -72,6 +72,7 @@ const approval_view = async ({ ack, body, view, client }) => {
 
   const approverId =
     view.state.values.approver_block.approver_action.selected_option.value;
+
   const approvalText =
     view.state.values.approval_text_block.approval_text_action.value;
   const requesterId = body.user.id;
@@ -90,13 +91,13 @@ const approval_view = async ({ ack, body, view, client }) => {
               name: "approve",
               text: "Approve",
               type: "button",
-              value: `{"requesterId": "${requesterId}", "status": "approved"}`,
+              value: `{"requesterId": "${requesterId}", "status": "approved", "approverId": "${approverId}"}`,
             },
             {
               name: "reject",
               text: "Reject",
               type: "button",
-              value: `{"requesterId": "${requesterId}", "status": "rejected"}`,
+              value: `{"requesterId": "${requesterId}", "status": "rejected", "approverId": "${approverId}"}`,
             },
           ],
         },
@@ -106,18 +107,18 @@ const approval_view = async ({ ack, body, view, client }) => {
     // Respond to the requester indicating that the approval request and reminder have been sent
     await client.chat.postMessage({
       channel: requesterId,
-      text: "Your approval request has been sent to the approver",
+      text: `Your approval request has been sent to <@${approverId}>.`,
     });
   } catch (error) {
     console.error("Error handling approval request:", error);
   }
 };
 
-const approval_action = async ({ body, ack, respond }) => {
+const approval_action = async ({ body, ack, view, respond }) => {
   await ack();
 
   const actionValue = JSON.parse(body.actions[0].value);
-  const { requesterId, status } = actionValue;
+  const { requesterId, status, approverId } = actionValue;
   const statusText = status === "approved" ? "approved" : "rejected";
 
   try {
@@ -129,7 +130,7 @@ const approval_action = async ({ body, ack, respond }) => {
     // Notify the requester about the approval status
     await slackApp.client.chat.postMessage({
       channel: requesterId,
-      text: `Your approval request has been ${statusText}.`,
+      text: `Your approval request has been ${statusText} from <@${approverId}>.`,
     });
   } catch (error) {
     console.error("Error handling approval action:", error);
