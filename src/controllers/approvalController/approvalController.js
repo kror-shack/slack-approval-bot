@@ -1,4 +1,4 @@
-const { slackApp } = require("../../lib/slackApp");
+const { slackApp } = require("../../lib/slackApp/slackApp");
 const {
   approvalConfirmation,
 } = require("../../views/approvalConfirmation/approvalConfirmation");
@@ -11,7 +11,13 @@ const {
 } = require("../../views/approvalResponse/approvalResponse");
 const { approvalUpdate } = require("../../views/approvalUpdate/approvalUpdate");
 
-// Slash command listener for /approval
+/**
+ * Slash command controller for /approval-test.
+ * @param {Object} options - Options object.
+ * @param {Object} options.command - The command object.
+ * @param {Function} options.ack - The acknowledgment function.
+ * @param {Object} options.client - The Slack client object.
+ */
 const approval_form = async ({ command, ack, client }) => {
   console.log("received at /approval");
   try {
@@ -31,6 +37,14 @@ const approval_form = async ({ command, ack, client }) => {
   }
 };
 
+/**
+ * Handler for approval view submission.
+ * @param {Object} options - Options object.
+ * @param {Function} options.ack - The acknowledgment function.
+ * @param {Object} options.body - The request body.
+ * @param {Object} options.view - The view object.
+ * @param {Object} options.client - The Slack client object.
+ */
 const approval_view = async ({ ack, body, view, client }) => {
   await ack(); // Acknowledge the view submission
 
@@ -62,9 +76,17 @@ const approval_view = async ({ ack, body, view, client }) => {
   }
 };
 
+/**
+ * Handler for approval action.
+ * @param {Object} options - Options object.
+ * @param {Object} options.body - The request body.
+ * @param {Function} options.ack - The acknowledgment function.
+ * @param {Function} options.respond - The respond function.
+ * @returns {void}
+ */
 const approval_action = async ({ body, ack, respond }) => {
   console.log("this is an approval action");
-  await ack();
+  await ack(); // Acknowledge the view submission
 
   const actionValue = JSON.parse(body.actions[0].value);
   console.log("🚀 ~ constapproval_action= ~ actionValue:", actionValue);

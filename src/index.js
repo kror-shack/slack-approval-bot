@@ -3,7 +3,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const slackRouter = require("./routes/slackRoutes/slackRoutes");
 const approvalController = require("./controllers/approvalController/approvalController");
-const { slackApp } = require("./lib/slackApp");
+const { slackApp } = require("./lib/slackApp/slackApp");
 
 // Initialize an Express application
 const app = express();

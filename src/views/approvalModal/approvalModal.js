@@ -1,5 +1,9 @@
+/**
+ * Return sview object used in the Slack API.
+ * @param {object} users - The users in the present workspace
+ * @returns - An object with the modal view to make an approval request
+ */
 const approvalModal = (users) => {
-  // Construct the modal view
   const modal = {
     type: "modal",
     callback_id: "approval_request",

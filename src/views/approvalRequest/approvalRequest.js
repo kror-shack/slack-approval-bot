@@ -1,3 +1,10 @@
+/**
+ * Represents a view object used in the Slack API.
+ * @param {string} requesterId - The slack id of the requester
+ * @param {string} approvalText - The description of the approval text
+ * @param {string} approverId  - THe slack id of the approver
+ * @returns - A view to notify the approver of the request
+ */
 const approvalRequest = (requesterId, approvalText, approverId) => {
   const requestView = {
     channel: approverId,

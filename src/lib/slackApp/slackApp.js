@@ -7,6 +7,7 @@ const slackApp = new App({
   signingSecret: process.env.SLACK_SIGNING_SECRET,
 });
 
+// Starts the Slack Bolt app.
 (async () => {
   await slackApp.start(process.env.PORT || 3000);
   console.log("Slack bot is running!");

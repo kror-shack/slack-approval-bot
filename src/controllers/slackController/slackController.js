@@ -1,5 +1,12 @@
-const { slackApp } = require("../../lib/slackApp");
+const { slackApp } = require("../../lib/slackApp/slackApp");
 
+/**
+ * Handles Slack events received at the "/slacks/events" endpoint.
+ * @function
+ * @param {Object} req - The request object.
+ * @param {Object} res - The response object.
+ * @returns {Promise<void>} A Promise that resolves when the event is processed.
+ */
 const slack_events_index = async (req, res) => {
   if (req.body.type === "url_verification") {
     return res.send({ challenge: req.body.challenge });

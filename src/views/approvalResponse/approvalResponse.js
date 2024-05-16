@@ -1,5 +1,12 @@
+/**
+ * Represents a view object used in the Slack API.
+ * @typedef {Object} View
+ * @param {string} statusText - The status of the request : approved/rejected
+ * @param {string} requesterId - The slack id of the requester
+ * @param {string} approvalText - The description of the approval text
+ * @returns - An object with the message view of the appoval response to send to the approver.
+ */
 const approvalResponse = (statusText, requesterId, approvalText) => {
-  // View to respond to the approver's action
   const requestResponseView = {
     channel: requesterId,
     blocks: [

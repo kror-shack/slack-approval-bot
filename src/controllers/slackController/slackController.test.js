@@ -1,8 +1,8 @@
 const request = require("supertest");
-const { slackApp } = require("../../lib/slackApp");
+const { slackApp } = require("../../lib/slackApp/slackApp");
 const { slack_events_index } = require("./slackController");
 
-jest.mock("../../lib/slackApp", () => ({
+jest.mock("../../lib/slackApp/slackApp", () => ({
   slackApp: {
     processEvent: jest.fn(),
   },

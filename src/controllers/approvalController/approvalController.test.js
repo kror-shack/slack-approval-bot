@@ -1,12 +1,12 @@
 const request = require("supertest");
-const { slackApp } = require("../../lib/slackApp");
+const { slackApp } = require("../../lib/slackApp/slackApp");
 const {
   approval_form,
   approval_view,
   approval_action,
 } = require("./approvalController");
 
-jest.mock("../../lib/slackApp", () => ({
+jest.mock("../../lib/slackApp/slackApp", () => ({
   slackApp: {
     client: {
       users: {
