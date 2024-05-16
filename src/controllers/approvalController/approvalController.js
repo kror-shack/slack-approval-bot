@@ -19,13 +19,11 @@ const { approvalUpdate } = require("../../views/approvalUpdate/approvalUpdate");
  * @param {Object} options.client - The Slack client object.
  */
 const approval_form = async ({ command, ack, client }) => {
-  console.log("received at /approval");
   try {
     await ack(); // Acknowledge the command request
 
     // Fetch the list of users
     const users = await client.users.list();
-    console.log("🚀 ~ constapproval_form= ~ users:", users);
     const model = approvalModal(users);
 
     // Open the modal
@@ -85,11 +83,9 @@ const approval_view = async ({ ack, body, view, client }) => {
  * @returns {void}
  */
 const approval_action = async ({ body, ack, respond }) => {
-  console.log("this is an approval action");
   await ack(); // Acknowledge the view submission
 
   const actionValue = JSON.parse(body.actions[0].value);
-  console.log("🚀 ~ constapproval_action= ~ actionValue:", actionValue);
   const { requesterId, status, approverId, approvalText } = actionValue;
   const statusText = status === "approved" ? "approved" : "rejected";
 
