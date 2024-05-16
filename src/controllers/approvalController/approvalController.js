@@ -25,6 +25,7 @@ const approval_form = async ({ command, ack, client }) => {
 
     // Fetch the list of users
     const users = await client.users.list();
+    console.log("🚀 ~ constapproval_form= ~ users:", users);
     const model = approvalModal(users);
 
     // Open the modal
@@ -36,7 +37,6 @@ const approval_form = async ({ command, ack, client }) => {
     console.error("Error handling slash command:", error);
   }
 };
-
 /**
  * Handler for approval view submission.
  * @param {Object} options - Options object.

@@ -35,7 +35,6 @@ describe("Approval Controller", () => {
       const command = { trigger_id: "123" };
 
       await approval_form({ command, ack, client });
-      console.log("dsfadsf", client.users.list());
       expect(ack).toHaveBeenCalled();
       expect(client.views.open).toHaveBeenCalledWith({
         trigger_id: "123",

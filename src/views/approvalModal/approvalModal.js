@@ -18,13 +18,15 @@ const approvalModal = (users) => {
         element: {
           type: "static_select",
           action_id: "approver_action",
-          options: users.members.map((user) => ({
-            text: {
-              type: "plain_text",
-              text: user.real_name,
-            },
-            value: user.id,
-          })),
+          options: users.members
+            .filter((user) => !user.deleted) // Filter out users where deleted is true
+            .map((user) => ({
+              text: {
+                type: "plain_text",
+                text: user.real_name,
+              },
+              value: user.id,
+            })),
         },
         label: {
           type: "plain_text",
