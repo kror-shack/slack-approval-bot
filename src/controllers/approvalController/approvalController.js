@@ -47,7 +47,8 @@ const approval_view = async ({ ack, body, view, client }) => {
   // view for the requester for approval confirmation
   const approvalConfirmationView = approvalConfirmation(
     requesterId,
-    approverId
+    approverId,
+    approvalText
   );
 
   try {
@@ -61,21 +62,28 @@ const approval_view = async ({ ack, body, view, client }) => {
   }
 };
 
-const approval_action = async ({ body, ack, view, respond }) => {
+const approval_action = async ({ body, ack, respond }) => {
+  console.log("this is an approval action");
   await ack();
 
   const actionValue = JSON.parse(body.actions[0].value);
-  const { requesterId, status, approverId } = actionValue;
+  console.log("🚀 ~ constapproval_action= ~ actionValue:", actionValue);
+  const { requesterId, status, approverId, approvalText } = actionValue;
   const statusText = status === "approved" ? "approved" : "rejected";
 
   // View to respond to the approver's action
-  const requestResponseView = approvalResponse(statusText, requesterId);
+  const requestResponseView = approvalResponse(
+    statusText,
+    requesterId,
+    approvalText
+  );
 
   // View to notify the requester about the approval status
   const responseUpdateView = approvalUpdate(
     requesterId,
     statusText,
-    approverId
+    approverId,
+    approvalText
   );
 
   try {

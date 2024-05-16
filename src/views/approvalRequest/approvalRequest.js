@@ -1,7 +1,22 @@
 const approvalRequest = (requesterId, approvalText, approverId) => {
   const requestView = {
     channel: approverId,
-    text: `You have a new approval request from <@${requesterId}>: ${approvalText}`,
+    blocks: [
+      {
+        type: "section",
+        text: {
+          type: "mrkdwn",
+          text: `:wave: Have a moment? A colleague is in need of your approval.`,
+        },
+      },
+      {
+        type: "section",
+        text: {
+          type: "mrkdwn",
+          text: `*Requested by:* <@${requesterId}>\n*Description:* ${approvalText}`,
+        },
+      },
+    ],
     attachments: [
       {
         fallback: "You are unable to approve or reject",
@@ -11,18 +26,19 @@ const approvalRequest = (requesterId, approvalText, approverId) => {
             name: "approve",
             text: "Approve",
             type: "button",
-            value: `{"requesterId": "${requesterId}", "status": "approved", "approverId": "${approverId}"}`,
+            value: `{"requesterId": "${requesterId}", "status": "approved", "approverId": "${approverId}", "approvalText": "${approvalText}"}`,
           },
           {
             name: "reject",
             text: "Reject",
             type: "button",
-            value: `{"requesterId": "${requesterId}", "status": "rejected", "approverId": "${approverId}"}`,
+            value: `{"requesterId": "${requesterId}", "status": "rejected", "approverId": "${approverId}", "approvalText": "${approvalText}"}`,
           },
         ],
       },
     ],
   };
+
   return requestView;
 };
 
