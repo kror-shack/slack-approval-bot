@@ -1,4 +1,15 @@
 const { slackApp } = require("../../slackApp");
+const {
+  approvalConfirmation,
+} = require("../../views/approvalConfirmation/approvalConfirmation");
+const { approvalModel } = require("../../views/approvalModel/approvalModal");
+const {
+  approvalRequest,
+} = require("../../views/approvalRequest/approvalRequest");
+const {
+  approvalResponse,
+} = require("../../views/approvalResponse/approvalResponse");
+const { approvalUpdate } = require("../../views/approvalUpdate/approvalUpdate");
 
 // Slash command listener for /approval
 const approval_form = async ({ command, ack, client }) => {
@@ -8,59 +19,12 @@ const approval_form = async ({ command, ack, client }) => {
 
     // Fetch the list of users
     const users = await client.users.list();
-
-    // Construct the modal view
-    const modal = {
-      type: "modal",
-      callback_id: "approval_request",
-      title: {
-        type: "plain_text",
-        text: "Request Approval",
-      },
-      blocks: [
-        {
-          type: "input",
-          block_id: "approver_block",
-          element: {
-            type: "static_select",
-            action_id: "approver_action",
-            options: users.members.map((user) => ({
-              text: {
-                type: "plain_text",
-                text: user.real_name,
-              },
-              value: user.id,
-            })),
-          },
-          label: {
-            type: "plain_text",
-            text: "Select Approver",
-          },
-        },
-        {
-          type: "input",
-          block_id: "approval_text_block",
-          element: {
-            type: "plain_text_input",
-            multiline: true,
-            action_id: "approval_text_action",
-          },
-          label: {
-            type: "plain_text",
-            text: "Approval Text",
-          },
-        },
-      ],
-      submit: {
-        type: "plain_text",
-        text: "Submit",
-      },
-    };
+    const model = approvalModel(users);
 
     // Open the modal
     await client.views.open({
       trigger_id: command.trigger_id,
-      view: modal,
+      view: model,
     });
   } catch (error) {
     console.error("Error handling slash command:", error);
@@ -77,38 +41,21 @@ const approval_view = async ({ ack, body, view, client }) => {
     view.state.values.approval_text_block.approval_text_action.value;
   const requesterId = body.user.id;
 
+  // view for the approval request
+  const requestView = approvalRequest(requesterId, approvalText, approverId);
+
+  // view for the requester for approval confirmation
+  const approvalConfirmationView = approvalConfirmation(
+    requesterId,
+    approverId
+  );
+
   try {
     // Send the approval request to the approver
-    await client.chat.postMessage({
-      channel: approverId,
-      text: `You have a new approval request from <@${requesterId}>: ${approvalText}`,
-      attachments: [
-        {
-          fallback: "You are unable to approve or reject",
-          callback_id: "approval_action",
-          actions: [
-            {
-              name: "approve",
-              text: "Approve",
-              type: "button",
-              value: `{"requesterId": "${requesterId}", "status": "approved", "approverId": "${approverId}"}`,
-            },
-            {
-              name: "reject",
-              text: "Reject",
-              type: "button",
-              value: `{"requesterId": "${requesterId}", "status": "rejected", "approverId": "${approverId}"}`,
-            },
-          ],
-        },
-      ],
-    });
+    await client.chat.postMessage(requestView);
 
-    // Respond to the requester indicating that the approval request and reminder have been sent
-    await client.chat.postMessage({
-      channel: requesterId,
-      text: `Your approval request has been sent to <@${approverId}>.`,
-    });
+    // Respond to the requester indicating that the approval request has been sent
+    await client.chat.postMessage(approvalConfirmationView);
   } catch (error) {
     console.error("Error handling approval request:", error);
   }
@@ -121,17 +68,22 @@ const approval_action = async ({ body, ack, view, respond }) => {
   const { requesterId, status, approverId } = actionValue;
   const statusText = status === "approved" ? "approved" : "rejected";
 
+  // View to respond to the approver's action
+  const requestResponseView = approvalResponse(statusText, requesterId);
+
+  // View to notify the requester about the approval status
+  const responseUpdateView = approvalUpdate(
+    requesterId,
+    statusText,
+    approverId
+  );
+
   try {
     // Respond to the approver's action
-    await respond({
-      text: `You have ${statusText} the approval request from <@${requesterId}>.`,
-    });
+    await respond(requestResponseView);
 
     // Notify the requester about the approval status
-    await slackApp.client.chat.postMessage({
-      channel: requesterId,
-      text: `Your approval request has been ${statusText} from <@${approverId}>.`,
-    });
+    await slackApp.client.chat.postMessage(responseUpdateView);
   } catch (error) {
     console.error("Error handling approval action:", error);
   }
