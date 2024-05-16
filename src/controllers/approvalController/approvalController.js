@@ -1,8 +1,8 @@
-const { slackApp } = require("../../slackApp");
+const { slackApp } = require("../../lib/slackApp");
 const {
   approvalConfirmation,
 } = require("../../views/approvalConfirmation/approvalConfirmation");
-const { approvalModel } = require("../../views/approvalModel/approvalModal");
+const { approvalModal } = require("../../views/approvalModal/approvalModal");
 const {
   approvalRequest,
 } = require("../../views/approvalRequest/approvalRequest");
@@ -19,7 +19,7 @@ const approval_form = async ({ command, ack, client }) => {
 
     // Fetch the list of users
     const users = await client.users.list();
-    const model = approvalModel(users);
+    const model = approvalModal(users);
 
     // Open the modal
     await client.views.open({

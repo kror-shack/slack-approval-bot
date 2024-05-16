@@ -1,4 +1,4 @@
-const approvalModel = (users) => {
+const approvalModal = (users) => {
   // Construct the modal view
   const modal = {
     type: "modal",
@@ -48,4 +48,4 @@ const approvalModel = (users) => {
   };
   return modal;
 };
-module.exports = { approvalModel };
+module.exports = { approvalModal };

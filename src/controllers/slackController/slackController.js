@@ -1,4 +1,4 @@
-const { slackApp } = require("../../slackApp");
+const { slackApp } = require("../../lib/slackApp");
 
 const slack_events_index = async (req, res) => {
   if (req.body.type === "url_verification") {
