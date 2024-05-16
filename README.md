@@ -24,11 +24,11 @@ The following are video demos for the bot, from the approver and requester presp
 
 ### Approver
 
-Click on here to view vide: https://streamable.com/e/wpw3zi?
+Click here to view video: https://streamable.com/e/wpw3zi?
 
 ## Requester
 
-Click on here to view vide: https://streamable.com/e/d3qqbt?
+Click here to view video: https://streamable.com/e/d3qqbt?
 
 ## Running Locally
 
