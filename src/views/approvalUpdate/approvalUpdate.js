@@ -14,7 +14,7 @@ const approvalUpdate = (requesterId, statusText, approverId, approvalText) => {
         type: "section",
         text: {
           type: "mrkdwn",
-          text: `Your approval request has been ${statusText} from <@${approverId}>.`,
+          text: `Your approval request has been *${statusText}* from <@${approverId}>.`,
         },
       },
       {
